@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const AnnouncementSchema = new mongoose.Schema({
    title:{
       type:String,
-      required:true
+      required:true 
    },
    body: {
    type:String,
@@ -18,6 +18,7 @@ const AnnouncementSchema = new mongoose.Schema({
       ref: "User",
       required: true,
    },
+   
 }, { timestamps: true });
 
 module.exports = mongoose.model("Announcement", AnnouncementSchema);
