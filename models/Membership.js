@@ -28,6 +28,7 @@ const membershipSchema = new mongoose.Schema({
       default: 'active'
     },
 }, { timestamps: true })
+
 membershipSchema.index(
   { jamiya: 1, user: 1 },
   { unique: true }
