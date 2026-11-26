@@ -4,15 +4,16 @@ const jwt = require("jsonwebtoken");
 
 async function signUp(req, res) {
   try {
-    const { username, password } = req.body;
+    const { username, password , fullName} = req.body;
 
     // Validation
     if (!username || !password) return res.status(400).json({message: "Username and password are required.",});
     if (password.length < 6) return res.status(400).json({message: "Password must be more than 6 characters",});
 
     const user = await User.create({
-      username,
+      username , fullName,
       hashedPassword: await bcrypt.hash(password, 12),
+
     });
 
     const { _id, createdAt, updatedAt } = user;
@@ -41,9 +42,9 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
   try {
-    const { username, password } = req.body;
+    const { username, password , fullName } = req.body;
 
-    if (!username || !password) {
+    if (!username || !password || !fullName) {
       return res.status(400).json({
         message: "Username and password are required.",
       });
@@ -62,7 +63,7 @@ async function signIn(req, res) {
     }
 
     // Construct the payload
-    const payload = { username: user.username, _id: user._id };
+    const payload = { username: user.username, _id: user._id , fullName:user.fullName };
 
 
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -73,6 +74,7 @@ async function signIn(req, res) {
       user: {
         _id: user._id,
         username: user.username,
+        fullname:  user.fullName
       },
     });
   } catch (err) {
@@ -97,6 +99,7 @@ async function verifyUser(req, res) {
     return res.status(200).json({
         _id: user._id,
         username: user.username,
+        fullName:user.fullName
     });
   } catch (err) {
     console.error(err);
