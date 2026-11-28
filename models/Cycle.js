@@ -25,14 +25,12 @@ const cycleSchema = new mongoose.Schema({
 
     status: {
         type: String,
-        enum: ['upcomming', 'active', 'completed'],
-        default: 'upcomming'
+        enum: ['upcoming', 'active', 'completed'],
+        default: 'upcoming'
     },
 }, { timestamps: true })
 
 cycleSchema.index({ jamiya: 1, cycleNumber: 1 }, { unique: true })
 
-
-
-const cycle = mongoose.model("Cycle", cycleSchema);
-module.exports = cycle;
+const Cycle = mongoose.model("Cycle", cycleSchema);
+module.exports = Cycle;

@@ -34,6 +34,6 @@ membershipSchema.index(
   { unique: true }
 );
 
-const Membership = mongoose.model("membership", membershipSchema);
+const Membership = mongoose.model("Membership", membershipSchema);
 
 module.exports = Membership;
