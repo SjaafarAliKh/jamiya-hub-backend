@@ -130,7 +130,7 @@ async function updateJamiya(req, res) {
                 startDate,
                 maxMembers,
                 status
-            }
+            },
             {
                 new: true,
                 runValidators: true
