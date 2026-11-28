@@ -45,7 +45,7 @@ const jamiyaSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-})
+}, { timestamps: true })
 
-const jamiya = mongoose.model("jamiya", jamiyaSchema);
-module.exports = jamiya;
+const Jamiya = mongoose.model("Jamiya", jamiyaSchema);
+module.exports = Jamiya;

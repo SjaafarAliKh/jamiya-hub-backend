@@ -1,5 +1,4 @@
 const Jamiya = require('../models/Jamiya')
-const membership = require('../models/Membership')
 const Membership = require('../models/Membership')
 
 // POST /jamiyas
@@ -56,7 +55,7 @@ async function getJamiyas(req, res) {
             _id: { $in: jamiyaIds }
         })
 
-     return res.status(200).json(jamiyas)
+        return res.status(200).json(jamiyas)
 
     } catch (error) {
         console.error(error)
@@ -64,9 +63,54 @@ async function getJamiyas(req, res) {
     }
 }
 
+// GET /jamiyas/:jamiyaId
+async function getJamiyaById(req, res) {
+    try {
+        // Check if the logged-in user is an active member
+        const membership = await Membership.findOne({
+            jamiya: req.params.jamiyaId,
+            user: req.user._id,
+            status: 'active'
+        })
+
+        if (!membership) {
+            return res.status(403).json({
+                error: 'You are not a member of this Jamiya.'
+            })
+        }
+
+        const jamiya = await Jamiya.findById(req.params.jamiyaId)
+
+        if (!jamiya) {
+            return res.status(404).json({
+                error: 'Jamiya not found.'
+            })
+        }
+
+        return res.status(200).json(jamiya)
+
+    } catch (error) {
+        console.error(error)
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                error: 'Invalid Jamiya ID.'
+            })
+        }
+
+        return res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+}
+
+
+
+
 
 
 module.exports = {
     createJamiya,
-    getJamiyas
+    getJamiyas,
+    getJamiyaById
 }
