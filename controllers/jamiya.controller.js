@@ -104,13 +104,73 @@ async function getJamiyaById(req, res) {
     }
 }
 
+// PUT /jamiyas/:jamiyaId
+async function updateJamiya(req, res) {
+    try {
+        const {
+            name,
+            description,
+            contributionAmount,
+            frequency,
+            startDate,
+            maxMembers,
+            status
+        } = req.body
 
+        const updatedJamiya = await Jamiya.findOneAndUpdate(
+            {
+                _id: req.params.jamiyaId,
+                organizer: req.user._id
+            },
+            {
+                name,
+                description,
+                contributionAmount,
+                frequency,
+                startDate,
+                maxMembers,
+                status
+            }
+            {
+                new: true,
+                runValidators: true
+            }
+        )
 
+        if (updatedJamiya) {
+            return res.status(404).json({
+                error: 'Jamiya not found or you are not authorized to update it.'
+            })
+
+        }
+
+        return res.status(200).json(updatedJamiya)
+
+    } catch (error) {
+        console.error(error)
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                error: error.message
+            })
+        }
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                error: 'Invalid Jamiya ID.'
+            })
+        }
+
+        return res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+}
 
 
 
 module.exports = {
     createJamiya,
     getJamiyas,
-    getJamiyaById
+    getJamiyaById,
+    updateJamiya
 }
